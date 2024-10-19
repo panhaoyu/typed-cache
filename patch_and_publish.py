@@ -1,7 +1,5 @@
 import subprocess
 
-from prompt_toolkit.shortcuts import radiolist_dialog
-
 
 def run_command(command):
     """运行命令并处理错误"""
@@ -33,20 +31,12 @@ def process_release(version_type="patch"):
 
 
 def main():
-    # 使用 prompt-toolkit 提供一个交互式选择菜单
-    version_type = radiolist_dialog(
-        title="Select Version Type",
-        text="Choose the version type to bump:",
-        values=[
-            ("patch", "Patch - Small bug fixes"),
-            ("minor", "Minor - New features, but backward compatible"),
-            ("major", "Major - Breaking changes"),
-        ]
-    ).run()
+    # 提示用户输入版本类型
+    version_type = input("Enter version type (patch/minor/major), default is patch: ").strip()
 
+    # 如果用户输入为空，默认使用 'patch'
     if not version_type:
-        print("No version type selected. Exiting.")
-        return
+        version_type = "patch"
 
     try:
         process_release(version_type)  # 调用处理函数，并传入版本类型
