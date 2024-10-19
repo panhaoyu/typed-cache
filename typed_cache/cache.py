@@ -97,4 +97,3 @@ class Cache:
 
     def clear(self):
         self.path.exists() and self.path.unlink()
-00
