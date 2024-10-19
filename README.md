@@ -17,7 +17,19 @@
 
 ## Installation
 
-You can clone the repository or download the `typed_cache.py` file and include it in your project.
+To install `typed-cache`, you can use either `pip` or `poetry`:
+
+### Using `pip`:
+```bash
+pip install typed-cache
+```
+
+### Using `poetry`:
+```bash
+poetry add typed-cache
+```
+
+Simply choose your preferred package manager to install the library.
 
 ## Usage
 
