@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "typed-cache"
-version = "0.1.5"
+version = "0.1.6"
 description = "A framework for caching data locally. It features explicit caching with priority support for type hints."
 authors = ["panhaoyu <panhaoyu.china@outlook.com>"]
 license = "MIT"
