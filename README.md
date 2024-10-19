@@ -1,4 +1,4 @@
-# `typed-cache`
+# typed-cache
 
 `typed-cache` is a lightweight framework designed for caching data locally, supporting explicit caching with a focus on Python's type hints. It simplifies the process of persisting data to disk by allowing easy integration into custom data classes, with automatic loading and manual saving of data.
 
