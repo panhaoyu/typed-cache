@@ -1,7 +1,7 @@
 import pickle
 from pathlib import Path
 
-from .compatibility import dataclass, asdict
+from ._compatibility import dataclass, asdict
 
 
 @dataclass
