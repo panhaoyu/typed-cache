@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "typed-cache"
-version = "0.1.9"
+version = "0.1.10"
 description = "A framework for caching data locally. It features explicit caching with priority support for type hints."
 authors = ["panhaoyu <panhaoyu.china@outlook.com>"]
 license = "MIT"
@@ -9,6 +9,9 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.6"
 dataclasses = {version = "^0.8", python = "<3.7"}
+
+[tool.poetry.group.dev.dependencies]
+prompt-toolkit = "^2.0"
 
 [build-system]
 requires = ["poetry-core"]
