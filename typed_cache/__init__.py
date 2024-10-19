@@ -1,1 +1,1 @@
-from ._cache import Cache
+from ._cache import TypedCache

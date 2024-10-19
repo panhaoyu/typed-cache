@@ -5,7 +5,7 @@ from ._compatibility import dataclass, asdict
 
 
 @dataclass
-class Cache:
+class TypedCache:
     """
     一个用于将数据缓存到硬盘上的基类。通过继承此类，子类可以方便地实现数据持久化的功能。
     需要传入一个文件路径来确定缓存文件的位置。在初始化时自动加载缓存（如果存在），并提供手动保存数据的功能。
@@ -17,10 +17,10 @@ class Cache:
         save(): 手动保存当前对象的属性到缓存文件中。
 
     使用方法:
-        1. 定义一个继承自 Cache 的数据类，并在其中定义需要持久化的属性:
+        1. 定义一个继承自 TypedCache 的数据类，并在其中定义需要持久化的属性:
 
             @dataclass
-            class Data(Cache):
+            class Data(TypedCache):
                 a: int = None
                 b: float = None
                 c: str = None
