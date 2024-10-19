@@ -1,7 +1,7 @@
 import pickle
 from pathlib import Path
 
-from ._compatibility import dataclass, asdict
+from ._compatibility import dataclass, fields
 
 
 @dataclass
@@ -54,9 +54,12 @@ class TypedCache:
         Manually save the current object's attributes to the cache.
         Automatically excludes the `path` attribute from being saved.
         """
-        data = asdict(self)
-        # Exclude the 'path' attribute from the data to be saved
-        data = {k: v for k, v in data.items() if k != 'path'}
+        # Collect the fields without recursively converting nested dataclasses
+        data = {
+            field.name: getattr(self, field.name)
+            for field in fields(self)
+            if field.name != 'path'
+        }
         self.__save(data)
 
     def __save(self, data: dict) -> None:
