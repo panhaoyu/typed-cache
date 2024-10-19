@@ -7,17 +7,18 @@ from ._compatibility import dataclass, asdict
 @dataclass
 class TypedCache:
     """
-    一个用于将数据缓存到硬盘上的基类。通过继承此类，子类可以方便地实现数据持久化的功能。
-    需要传入一个文件路径来确定缓存文件的位置。在初始化时自动加载缓存（如果存在），并提供手动保存数据的功能。
+    A base class for caching data to disk. Subclasses can inherit this class to easily implement data persistence.
+    Requires a file path to determine the location of the cache file. Automatically loads cached data (if available) during initialization
+    and provides a manual save function to persist the data.
 
     Attributes:
-        path (Path): 指定数据缓存的文件路径，必须以 '.pickle' 为后缀。
+        path (Path): The file path for the cached data, must have a '.pickle' suffix.
 
     Methods:
-        save(): 手动保存当前对象的属性到缓存文件中。
+        save(): Manually save the current object's attributes to the cache file.
 
-    使用方法:
-        1. 定义一个继承自 TypedCache 的数据类，并在其中定义需要持久化的属性:
+    Usage:
+        1. Define a data class inheriting from TypedCache and specify the attributes that need to be persisted:
 
             @dataclass
             class Data(TypedCache):
@@ -26,74 +27,77 @@ class TypedCache:
                 c: str = None
                 d: bool = None
 
-        2. 初始化数据类时，传入缓存文件路径，并在需要时调用 `save()` 方法保存数据:
+        2. When initializing the data class, pass the cache file path and call `save()` when needed to save data:
 
             data = Data(path=Path.home() / 'Desktop/cache.pickle')
             data.a = 213
-            data.save()  # 将数据保存到指定的路径
+            data.save()  # Save data to the specified path
 
-            # 再次初始化时，之前保存的数据将会自动加载
+            # When reinitializing, the previously saved data will be automatically loaded
             data = Data(path=Path.home() / 'Desktop/cache.pickle')
             assert data.a == 213
 
     Raises:
-        ValueError: 如果路径后缀不是 '.pickle'，将抛出此异常。
-        FileNotFoundError: 如果尝试加载的缓存文件不存在，将抛出此异常。
+        ValueError: If the path does not have a '.pickle' suffix, this exception is raised.
+        FileNotFoundError: If the cache file is not found when attempting to load, this exception is raised.
     """
 
     path: Path
 
     def __post_init__(self):
         if self.path.suffix != '.pickle':
-            raise ValueError("缓存文件必须以 '.pickle' 为后缀")
+            raise ValueError("Cache file must have a '.pickle' suffix")
         self.__load_data()
 
     def save(self) -> None:
         """
-        手动保存当前对象的属性到缓存中。会自动排除掉 `path` 属性。
+        Manually save the current object's attributes to the cache.
+        Automatically excludes the `path` attribute from being saved.
         """
         data = asdict(self)
+        # Exclude the 'path' attribute from the data to be saved
         data = {k: v for k, v in data.items() if k != 'path'}
         self.__save(data)
 
     def __save(self, data: dict) -> None:
         """
-        将数据保存到缓存文件中。
+        Save the given data to the cache file.
 
         Args:
-            data (dict): 需要缓存的数据，以字典形式提供。
+            data (dict): The data to be cached, provided as a dictionary.
         """
-        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.parent.mkdir(parents=True, exist_ok=True)  # Create parent directories if necessary
         with self.path.open('wb') as f:
             pickle.dump(data, f)
 
     def __load(self) -> dict:
         """
-        从缓存文件中加载数据。
+        Load data from the cache file.
 
         Returns:
-            dict: 从缓存加载的数据，以字典形式返回。
+            dict: The data loaded from the cache, returned as a dictionary.
 
         Raises:
-            FileNotFoundError: 如果缓存文件不存在，将抛出此异常。
+            FileNotFoundError: If the cache file does not exist, this exception is raised.
         """
         if self.path.exists():
             with self.path.open('rb') as f:
                 return pickle.load(f)
         else:
-            raise FileNotFoundError(f"缓存文件 {self.path} 不存在")
+            raise FileNotFoundError(f"Cache file {self.path} not found")
 
     def __load_data(self) -> None:
         """
-        从缓存加载数据，并更新当前对象的属性。
-        如果缓存文件不存在，则不会更改当前对象的属性。
+        Load data from the cache and update the current object's attributes.
+        If the cache file does not exist, the object's attributes will not be changed.
         """
         try:
             data = self.__load()
             for key, value in data.items():
                 setattr(self, key, value)
         except FileNotFoundError:
-            pass
+            pass  # Ignore if cache does not exist
 
     def clear(self):
+        """Delete the cache file if it exists."""
         self.path.exists() and self.path.unlink()
